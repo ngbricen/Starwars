@@ -1,0 +1,85 @@
+h1{
+	position: static;
+}
+
+body{
+	background: url("../images/starwars.jpg");	
+	background-repeat: no-repeat;
+}
+
+h2,
+h3,
+span
+{
+	color: #e84f80;
+	size: 16px;
+}
+
+#myEnemies h2,
+h3, span
+{
+	color: black;
+}
+
+
+h3{
+	clear: both;
+}
+.allCharacters-image {
+  position: relative;
+  float: left;
+  z-index: 20;
+/*  width: 274px; */
+/*  margin: 20px 0px 25px;
+  padding-right: 70px;
+  overflow: auto;*/
+}
+
+.character-image {
+	width: 150px;
+    height: 150px;
+    padding: 20px;
+    border: 2px solid green;
+    background-color: white;
+    margin-right: 10px;
+	cursor: pointer;
+}
+
+.enemy-image {
+	width: 150px;
+    height: 150px;
+    padding: 20px;
+    border: 2px solid green;
+    background-color: white;
+    margin-right: 10px;
+	cursor: pointer;
+}
+
+
+.allCharacters-image .title{
+	position: absolute;
+  	width:150px;
+  	text-align: center;
+  	font-weight: bold;
+  	font-size: 12px;
+  	bottom: 130px;
+  	left:0px;
+}
+
+.allCharacters-image .score{
+  	position: absolute;
+  	width:150px;
+  	text-align: center;
+  	font-weight: bold;
+  	bottom: 0px;
+  	left:0px;
+}
+
+#myEnemies .enemy-image{
+	background-color: red;
+}
+
+#attackedResultMessage,
+#attackerResultMessage{
+	color: #e84f67;
+}

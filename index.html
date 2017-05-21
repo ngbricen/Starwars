@@ -1,0 +1,264 @@
+<!doctype html>
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<meta charset="UTF-8">
+	<title>Star Wars game</title>
+	<link rel="stylesheet" type="text/css" href="assets/css/reset.css">
+	<!-- <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"> -->
+	<link rel="stylesheet" type="text/css" href="assets/css/readable-bootstrap-min.css">
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
+</head>
+<body>
+	<div class="container">
+
+		<div class="row text-center">
+			<h2>Star Wars RPG</h2>
+		</div>
+
+		<div class="row">
+			<div id="allCharacters">
+				<div class="allCharacters-image">
+					<img class="character-image" src="assets/images/luke.jpg" alt="Luke">
+					<span class="title">Luke Skywalker</span>
+					<span class="score" value="100">100</span>
+				</div>
+				<div class="allCharacters-image">					
+					<img class="character-image" src="assets/images/obiwan.jpg" alt="Obi Wan">
+					<span class="title">Obi-Wan Kenobi</span>
+					<span class="score">120</span>
+				</div>
+				<div class="allCharacters-image">
+					<img class="character-image" src="assets/images/darthmaul.jpg" alt="Darth Maul">
+					<span class="title">Darth Maul</span>
+					<span class="score">180</span>					
+				</div>
+				<div class="allCharacters-image">
+					<img class="character-image" src="assets/images/darthsidious.jpg" alt="Darth Sidious">
+					<span class="title">Darth Sidious</span>
+					<span class="score">150</span>					
+				</div>
+			</div>
+			<h3>Your Character</h3>
+			<div  class="allCharacters-image" id="myCharacter"></div>
+		</div>
+		
+		<div class="row">
+			<h3>Enemies Available To Attack</h3>
+			<div  class="allCharacters-image" id="myEnemies"></div>
+		</div>
+		
+		<div class="row">
+			<h3>Fight Section</h3>
+			<button id="attack">Attack</button>
+		</div>
+
+		<div class="row">
+			<h3>Defender</h3>
+			<div  class="allCharacters-image" id="defender"></div>
+		</div>
+
+		<div class="row">
+			<span id="attackedResultMessage"></span>
+			<p></p>
+			<span id="attackerResultMessage"></span>
+			<p></p>
+			<button id="restart">Restart</button>
+		</div>
+	
+	</div>	
+	
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+
+	<script type="text/javascript">
+
+		$("#restart").hide();
+		$("#attackedResultMessage").hide();
+		$("#attackerResultMessage").hide();
+		
+		var currentWinCount = 0;
+		var currentPlayer;
+		var currentPlayerAttack;
+		var currentPlayerAttackIncrement;
+		var currentDefender;
+		var currentDefenderAttack;
+		var currentPlayerScore;
+		var currentDefenderScore;
+
+
+		var gameChoiceObject = {
+			"luke.jpg": ["Luke","120"],
+			"obiwan.jpg": ["Obi Wan Kenobi","100"],
+			"darthmaul.jpg": ["Darth Maul","180"],
+			"darthsidious.jpg": ["Darth Sidious","150"],
+		};
+
+		var gameChoice = Object.keys(gameChoiceObject);
+
+		var playerAttack = [4,8,16,32];
+		var defenderAttack = [5,10,15,20,25,30];
+
+
+		//Attack Button Actions		
+		$("#attack").on("click", function() {
+
+			if (currentDefender != ""){
+				//Scoring Updates
+				currentPlayerScore = currentPlayerScore - currentDefenderAttack;
+				currentDefenderScore = currentDefenderScore - currentPlayerAttack;
+				
+				//Message Updates
+				$("#myCharacter span:last").text(currentPlayerScore);
+				$("#defender span:last").text(currentDefenderScore);
+
+				$("#attackedResultMessage").text("You attacked " + currentDefender + " for " + currentPlayerAttack  + " damage.");
+				$("#attackerResultMessage").text(currentDefender + " attacked you back for " + currentDefenderAttack  + " damage.");
+				
+				//Show Win/Loss results message, or just display the current game scores.
+				if(currentPlayerScore <= 0 || currentDefenderScore <= 0){
+					if (currentPlayerScore <= 0){
+						$("#attackedResultMessage").text("You have been defeated... GAME OVER!!!");
+						$("#restart").show();
+					}
+					else if (currentDefenderScore <= 0) {
+						currentWinCount++;
+
+						if(currentWinCount === gameChoice.length - 1){
+							$("#attackedResultMessage").text("You have WON THE GAME!!! GAME OVER!!");
+							$("#restart").show();
+						}
+						else {
+							$("#attackedResultMessage").text("You have killed " + currentDefender + ". Pick your next opponent.");
+							$(".enemies").remove();
+						}
+
+						currentDefender = "";
+					}
+
+					$("#attackedResultMessage").show();
+					$("#attackerResultMessage").hide();
+				}
+				else {
+			  		$("#attackedResultMessage").show();
+					$("#attackerResultMessage").show();				
+				} 
+
+				currentPlayerAttack = currentPlayerAttack + currentPlayerAttackIncrement;
+			}
+			else {
+				$("#attackedResultMessage").text("There are no defenders currently selected");
+				$("#attackedResultMessage").show();
+				$("#attackerResultMessage").hide();
+			}
+	  	});
+
+
+		//Restart Button Actions
+		$("#restart").on("click", function() {
+		
+			location.reload();
+
+		});
+
+	  	// Here we created an on-click event that responds to button clicks of the crystal image.
+	  	$(".character-image").on("click", function() {
+
+	  		//Find Index of imaged that was selected
+	  		for(var i = 0; i < gameChoice.length; i++){
+				
+				//Defining the variables to automatically add the image to the My Attacker section
+		  		var mySelectedCharacterDiv = $("<div>");
+		  		mySelectedCharacterDiv.addClass("allCharacters-image");
+
+		  		AddingImageToDiv(i,mySelectedCharacterDiv);
+
+		  		AddingTextToImage(i,mySelectedCharacterDiv);
+
+		  		//The image selected should go ot the "My Character" section, otherwise, it should
+		  		//go to "My Enemies"
+	  			if ("assets/images/" + gameChoice[i] === $(this).attr("src")){
+	  				
+	  				currentPlayer = gameChoiceObject[gameChoice[i]][0];
+	  				currentPlayerAttack = playerAttack[Math.floor(Math.random() * playerAttack.length)]
+	  				currentPlayerAttackIncrement = currentPlayerAttack;
+	  				currentPlayerScore = gameChoiceObject[gameChoice[i]][1];
+
+	  				$("#myCharacter").append(mySelectedCharacterDiv);
+	  			
+	  			}else{
+	  				$("#myEnemies").append(mySelectedCharacterDiv);
+	  			}
+	  		}
+
+	  		$("#allCharacters").empty();
+	  	});
+
+		$("body").on('click','.enemy-image', function() {
+	
+
+	  		//Find Index of imaged that was selected
+	  		for(var i = 0; i < gameChoice.length; i++){
+				
+				//The image selected should go ot the "My Character" section, otherwise, it should
+		  		//go to "My Enemies"
+	  			if ("assets/images/" + gameChoice[i] === $(this).attr("src")){
+					
+					currentDefender = gameChoiceObject[gameChoice[i]][0];
+					currentDefenderAttack = defenderAttack[Math.floor(Math.random() * defenderAttack.length)]
+					currentDefenderScore = gameChoiceObject[gameChoice[i]][1];
+
+					//Defining the variables to automatically add the image to the My Attacker section
+			  		var mySelectedCharacterDiv = $("<div>");
+			  		mySelectedCharacterDiv.addClass("enemies");
+
+			  		AddingImageToDiv(i,mySelectedCharacterDiv);
+
+			  		AddingTextToImage(i,mySelectedCharacterDiv);
+
+			  		$("#defender").append(mySelectedCharacterDiv);
+
+			  		$(this).parent("div.allCharacters-image").remove();
+
+			  		break;
+	  			}
+
+
+	  		}
+
+	  		// $("#allCharacters").empty();
+	  	});
+
+	  	//Function to reset values
+		function AddingImageToDiv(index, selectDiv){
+
+	  		var mySelectedCharacterImage = $("<img>");
+	  		mySelectedCharacterImage.addClass("enemy-image");
+	  		mySelectedCharacterImage.attr("src","assets/images/" + gameChoice[index]);
+	  		mySelectedCharacterImage.attr("alt", gameChoiceObject[gameChoice[index]][0]);
+	  		
+	  		selectDiv.append(mySelectedCharacterImage);
+	    	
+		}
+
+		function AddingTextToImage(index, selectDiv){
+
+	  		var mySelectedCharacterTitle = $("<span>");
+	  		mySelectedCharacterTitle.addClass("title");
+	  		mySelectedCharacterTitle.text(gameChoiceObject[gameChoice[index]][0]);
+	  		selectDiv.append(mySelectedCharacterTitle);
+
+			var mySelectedCharacterScore = $("<span>");
+	  		mySelectedCharacterScore.addClass("score");
+	  		mySelectedCharacterScore.text(gameChoiceObject[gameChoice[index]][1]);
+	  		selectDiv.append(mySelectedCharacterScore);	  		
+	    	
+		}
+
+		function initializeCharacters(){
+			for(var i = 0; i < gameChoice.length; i++){
+
+			}
+		}
+	</script>
+</body>
+</html>

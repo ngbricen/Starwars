@@ -80,7 +80,7 @@
 		var currentPlayer;
 		var currentPlayerAttack;
 		var currentPlayerAttackIncrement;
-		var currentDefender;
+		var currentDefender = "";
 		var currentDefenderAttack;
 		var currentPlayerScore;
 		var currentDefenderScore;
@@ -218,6 +218,8 @@
 			  		$("#defender").append(mySelectedCharacterDiv);
 
 			  		$(this).parent("div.allCharacters-image").remove();
+
+			  		$("#attackedResultMessage").hide();
 
 			  		break;
 	  			}

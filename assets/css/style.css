@@ -79,7 +79,10 @@ h3{
 	background-color: red;
 }
 
-#attackedResultMessage,
+#attackedResultMessage{
+	color: ivory;
+}
+
 #attackerResultMessage{
-	color: #e84f80;
+	color:fuchsia;
 }

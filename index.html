@@ -113,7 +113,8 @@
 		//Attack Button Actions		
 		$("#attack").on("click", function() {
 
-			if (currentDefender != ""){
+			//Only Attack if there's a defender and the game is not over
+			if (currentDefender != "" && $("#attackedResultMessage").text() != "You have been defeated... GAME OVER!!!"){
 				//Scoring Updates
 				currentPlayerScore = currentPlayerScore - currentDefenderAttack;
 				currentDefenderScore = currentDefenderScore - currentPlayerAttack;
@@ -171,10 +172,10 @@
 
 		});
 
-	  	// Here we created an on-click event that responds to button clicks of the crystal image.
+	  	// Here we created an on-click event that responds to button clicks of the character's image.
 	  	$(".character-image").on("click", function() {
 
-	  		//Find Index of imaged that was selected
+	  		//After clicking assigning characters to Enemies or MyCharacter secion depending on the click!
 	  		for(var i = 0; i < gameChoice.length; i++){
 				
 				//Defining the variables to automatically add the image to the My Attacker section
@@ -204,6 +205,7 @@
 	  		$("#allCharacters").empty();
 	  	});
 
+	  	//Alternating call to assign click even only to enemy characters from the body element
 		$("body").on('click','.enemy-image', function() {
 	
 
@@ -253,6 +255,7 @@
 	    	
 		}
 
+		//Function to add text to top and bottom of the image
 		function AddingTextToImage(index, selectDiv){
 
 	  		var mySelectedCharacterTitle = $("<span>");
@@ -265,12 +268,6 @@
 	  		mySelectedCharacterScore.text(gameChoiceObject[gameChoice[index]][1]);
 	  		selectDiv.append(mySelectedCharacterScore);	  		
 	    	
-		}
-
-		function initializeCharacters(){
-			for(var i = 0; i < gameChoice.length; i++){
-
-			}
 		}
 	</script>
 </body>
